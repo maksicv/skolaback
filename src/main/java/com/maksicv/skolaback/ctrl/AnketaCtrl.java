@@ -51,7 +51,6 @@ public class AnketaCtrl {
     public Page<Anketa> getPage(@RequestParam(value="page") Integer pageNumber,
                                 @RequestParam(value="rowsPerPage") Integer rowsPerPage )  {
         
-        log.info("page number =" + pageNumber + " rows " + rowsPerPage);
         return anketaRepo.findAll(PageRequest.of(pageNumber,rowsPerPage));
     }
     
