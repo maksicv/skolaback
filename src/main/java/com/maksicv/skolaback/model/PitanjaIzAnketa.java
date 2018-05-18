@@ -25,7 +25,15 @@ public class PitanjaIzAnketa {
     
     private Long anketaId;
     private Long pitanjeId;
+    private Integer redniBroj;
 
+    public Integer getRedniBroj() {
+        return redniBroj;
+    }
+
+    public void setRedniBroj(Integer redniBroj) {
+        this.redniBroj = redniBroj;
+    }
     public Long getId() {
         return Id;
     }
