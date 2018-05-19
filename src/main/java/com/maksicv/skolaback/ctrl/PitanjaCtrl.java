@@ -32,20 +32,30 @@ public class PitanjaCtrl {
     @Autowired
     private PitanjeRepo pitanjeRepo;
     
+     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     @PostMapping("/api/pitanje")
     public Pitanje save(@RequestBody Pitanje pitanje){
+        log.info(pitanje.getPonudjeniOdgovori());
         pitanjeRepo.save(pitanje);
         return pitanje;
         }
     
+    @GetMapping("/api/deletepitanje/{id}")
+    public void deltePitanje( @PathVariable Long id  ){
+        pitanjeRepo.deleteById(id);
+    } 
+    
     @GetMapping("/api/pitanje")
     public Page<Pitanje> getPage(@RequestParam(value="page") Integer pageNumber,
                                  @RequestParam(value="rowsPerPage") Integer rowsPerPage,
-                                 @RequestParam(value="search") String search )  {
-        if (search.equals("")) {
+                                 @RequestParam(value="search" , required = false ) String search )  {
+           
+        if ( search == null ) {
+            log.info(" ALLL ");
             return pitanjeRepo.findAll(PageRequest.of( pageNumber, rowsPerPage ));
         } else {
+            log.info(" SEARCH");
            return  pitanjeRepo.searchDesc(search   , PageRequest.of(pageNumber,rowsPerPage));
         }
     }

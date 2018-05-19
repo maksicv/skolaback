@@ -67,7 +67,7 @@ public class Pitanje {
     
     public String[] ponudjeniOdgovori( ){
         String[] ret = this.ponudjeniOdgovori.split(",",-1); 
-        return ponudjeniOdgovori();
+        return this.ponudjeniOdgovori.split(",") ;
     }
     
 }
