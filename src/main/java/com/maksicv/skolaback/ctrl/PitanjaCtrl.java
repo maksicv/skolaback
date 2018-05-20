@@ -55,8 +55,11 @@ public class PitanjaCtrl {
             log.info(" ALLL ");
             return pitanjeRepo.findAll(PageRequest.of( pageNumber, rowsPerPage ));
         } else {
-            log.info(" SEARCH");
-           return  pitanjeRepo.searchDesc(search   , PageRequest.of(pageNumber,rowsPerPage));
+            search = "%" + search + "%";
+            log.info(" SEARCH" + search);
+            Page<Pitanje> ret = pitanjeRepo.searchDesc(search   , PageRequest.of(pageNumber,rowsPerPage));
+            log.info(" SIZE " + ret.getTotalElements()  );
+            return  ret;
         }
     }
 }
