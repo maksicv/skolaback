@@ -11,10 +11,10 @@ package com.maksicv.skolaback.model;
  */
 public class PitanjeSaRb {
     private Pitanje pitanje;
-    private int redniBroj; 
+    private Integer redniBroj; 
     private Long idAnkete;
 
-    public PitanjeSaRb (Pitanje p,int redniBroj , Long idAnkete){
+    public PitanjeSaRb (Pitanje p,Integer redniBroj , Long idAnkete){
         this.pitanje = p;
         this.redniBroj = redniBroj;
         this.idAnkete = idAnkete;
@@ -34,11 +34,11 @@ public class PitanjeSaRb {
         this.pitanje = pitanje;
     }
 
-    public int getRedniBroj() {
+    public Integer getRedniBroj() {
         return redniBroj;
     }
 
-    public void setRedniBroj(int redniBroj) {
+    public void setRedniBroj(Integer redniBroj) {
         this.redniBroj = redniBroj;
     }
 }
