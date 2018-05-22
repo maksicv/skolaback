@@ -5,7 +5,9 @@
  */
 package com.maksicv.skolaback.ctrl;
 import com.maksicv.skolaback.model.Pitanje;
+import com.maksicv.skolaback.model.PitanjeSaRb;
 import com.maksicv.skolaback.repo.PitanjeRepo;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +38,31 @@ public class PitanjaCtrl {
     
     @PostMapping("/api/pitanje")
     public Pitanje save(@RequestBody Pitanje pitanje){
-        log.info(pitanje.getPonudjeniOdgovori());
-        pitanjeRepo.save(pitanje);
-        return pitanje;
+        Pitanje  old= null;
+        if ( pitanje.getId() != null ) {
+            old = pitanjeRepo.findById(pitanje.getId()).get();
+        }  else {
+            old = new Pitanje();
         }
+        old.setDescription(pitanje.getDescription());
+        old.setPonudjeniOdgovori(pitanje.getPonudjeniOdgovori());
+        old.setTipPitanja(pitanje.getTipPitanja() );
+        pitanjeRepo.save(old);
+        return old;
+        }
+    
+    
+    @GetMapping("/api/pitanjaizankete/{id}")
+    public List<PitanjeSaRb> getPitanjaIzAnkete(@PathVariable Long id){
+        return pitanjeRepo.getPitanjaIzAnkete(id);
+    } 
+   
+    @GetMapping("/api/pitanjavanankete/{id}")
+    public List<Pitanje> getPitanjaVanAnkete(@PathVariable Long id){
+        return pitanjeRepo.getPitanjaVanAnkete(id);
+    } 
+     
+    
     
     @GetMapping("/api/deletepitanje/{id}")
     public void deltePitanje( @PathVariable Long id  ){
@@ -52,13 +75,10 @@ public class PitanjaCtrl {
                                  @RequestParam(value="search" , required = false ) String search )  {
            
         if ( search == null ) {
-            log.info(" ALLL ");
             return pitanjeRepo.findAll(PageRequest.of( pageNumber, rowsPerPage ));
         } else {
             search = "%" + search + "%";
-            log.info(" SEARCH" + search);
             Page<Pitanje> ret = pitanjeRepo.searchDesc(search   , PageRequest.of(pageNumber,rowsPerPage));
-            log.info(" SIZE " + ret.getTotalElements()  );
             return  ret;
         }
     }

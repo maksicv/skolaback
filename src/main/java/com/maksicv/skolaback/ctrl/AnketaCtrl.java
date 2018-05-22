@@ -46,7 +46,10 @@ public class AnketaCtrl {
         anketaRepo.deleteById(id);
     }
             
-    
+    @GetMapping("/api/anketa/{id}")
+    public Anketa getAnketa (@PathVariable Long id ){
+        return anketaRepo.findById(id).get();
+    }
     @GetMapping("/api/anketa")
     public Page<Anketa> getPage(@RequestParam(value="page") Integer pageNumber,
                                 @RequestParam(value="rowsPerPage") Integer rowsPerPage )  {

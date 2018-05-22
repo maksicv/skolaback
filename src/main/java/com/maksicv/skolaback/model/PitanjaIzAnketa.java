@@ -27,6 +27,10 @@ public class PitanjaIzAnketa {
     private Long pitanjeId;
     private Integer redniBroj;
 
+    
+    
+    
+    
     public Integer getRedniBroj() {
         return redniBroj;
     }
