@@ -4,9 +4,12 @@
  * and open the template in the editor.
  */
 package com.maksicv.skolaback.ctrl;
+import com.maksicv.skolaback.model.PitanjaIzAnketa;
 import com.maksicv.skolaback.model.Pitanje;
 import com.maksicv.skolaback.model.PitanjeSaRb;
 import com.maksicv.skolaback.repo.PitanjeRepo;
+import com.maksicv.skolaback.repo.PitanjaIzAnketaRepo;
+
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +36,10 @@ public class PitanjaCtrl {
     
     @Autowired
     private PitanjeRepo pitanjeRepo;
+    @Autowired
+    private PitanjaIzAnketaRepo pitanjaIzAnketaRepo;
     
-     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     @PostMapping("/api/pitanje")
     public Pitanje save(@RequestBody Pitanje pitanje){
@@ -53,16 +58,41 @@ public class PitanjaCtrl {
     
     
     @GetMapping("/api/pitanjaizankete/{id}")
-    public List<PitanjeSaRb> getPitanjaIzAnkete(@PathVariable Long id){
-        return pitanjeRepo.getPitanjaIzAnkete(id);
+    public List<PitanjeSaRb> getPitanjaIzAnkete(@PathVariable Long id, @RequestParam(value="search" ,required=false) String search ){
+        String s="%";
+        if ( search != null ) {
+            s = "%" + search + "%";
+        }
+        List<PitanjeSaRb> lista= pitanjeRepo.getPitanjaIzAnkete(id,search);
+        log.info("LISTA " + lista.size());
+        return lista;
     } 
-   
-    @GetMapping("/api/pitanjavanankete/{id}")
-    public List<Pitanje> getPitanjaVanAnkete(@PathVariable Long id){
-        return pitanjeRepo.getPitanjaVanAnkete(id);
-    } 
-     
     
+    @GetMapping("/api/pitanjavanankete/{id}")
+    public List<Pitanje> getPitanjaVanAnkete(@PathVariable Long id , @RequestParam(value="search" ,required=false) String search){
+        String s="%";
+        if ( search != null ) {
+            s = "%" + search + "%";
+        }
+        return pitanjeRepo.getPitanjaVanAnkete(id,s);
+    } 
+    
+    @PostMapping("api/dodajpitanje")
+    public PitanjaIzAnketa dodajPitanje(@RequestBody PitanjeSaRb p ){
+        PitanjaIzAnketa pit = new PitanjaIzAnketa();
+        pit.setAnketaId(p.getIdAnkete());
+        pit.setPitanjeId(p.getPitanje().getId());
+        pit.setRedniBroj(p.getRedniBroj());
+        pitanjaIzAnketaRepo.povecajRedniBroj(p.getIdAnkete(),p.getRedniBroj());
+        pit = pitanjaIzAnketaRepo.save(pit);
+        return pit;
+    }
+    
+    @PostMapping("api/izbacipitanje")
+    public void izbaciPitanje(@RequestBody PitanjeSaRb p ){
+        pitanjaIzAnketaRepo.smanjiRedniBroj(p.getIdAnkete(),p.getRedniBroj());
+        pitanjaIzAnketaRepo.izbaciPitanjeizAnkete(p.getIdAnkete(),p.getPitanje().getId());
+    }
     
     @GetMapping("/api/deletepitanje/{id}")
     public void deltePitanje( @PathVariable Long id  ){

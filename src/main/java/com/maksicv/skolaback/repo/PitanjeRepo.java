@@ -25,10 +25,10 @@ public interface PitanjeRepo extends PagingAndSortingRepository <Pitanje,Long> {
     public Page<Pitanje> searchDesc(String desc,Pageable page);
     
     @Query("select new com.maksicv.skolaback.model.PitanjeSaRb(p, a.redniBroj ,a.anketaId) "
-            + "from Pitanje p , PitanjaIzAnketa a where  a.anketaId = ?1 and a.pitanjeId = p.id" )
-    public List<PitanjeSaRb> getPitanjaIzAnkete(Long idAnkete);
+            + "from Pitanje p , PitanjaIzAnketa a where  p.description like ?2 and a.anketaId = ?1 and a.pitanjeId = p.id" )
+    public List<PitanjeSaRb> getPitanjaIzAnkete(Long idAnkete,String search);
     
-    @Query("select p  from Pitanje p , PitanjaIzAnketa a where  a.anketaId = ?1 and a.pitanjeId <> p.id     " )
-    public List<Pitanje> getPitanjaVanAnkete(Long idAnkete);
+    @Query("select p  from Pitanje p where description like ?2 and not exists ( from PitanjaIzAnketa a  where a.anketaId = ?1 and  a.pitanjeId=p.id ) " )
+    public List<Pitanje> getPitanjaVanAnkete(Long idAnkete , String searchTerm );
     
 }
