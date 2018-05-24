@@ -63,8 +63,7 @@ public class PitanjaCtrl {
         if ( search != null ) {
             s = "%" + search + "%";
         }
-        List<PitanjeSaRb> lista= pitanjeRepo.getPitanjaIzAnkete(id,search);
-        log.info("LISTA " + lista.size());
+        List<PitanjeSaRb> lista= pitanjeRepo.getPitanjaIzAnkete(id,s);
         return lista;
     } 
     
@@ -89,9 +88,11 @@ public class PitanjaCtrl {
     }
     
     @PostMapping("api/izbacipitanje")
-    public void izbaciPitanje(@RequestBody PitanjeSaRb p ){
-        pitanjaIzAnketaRepo.smanjiRedniBroj(p.getIdAnkete(),p.getRedniBroj());
+    public Pitanje izbaciPitanje(@RequestBody PitanjeSaRb p ){
         pitanjaIzAnketaRepo.izbaciPitanjeizAnkete(p.getIdAnkete(),p.getPitanje().getId());
+        pitanjaIzAnketaRepo.smanjiRedniBroj(p.getIdAnkete(),p.getRedniBroj());
+        Pitanje p1 = new Pitanje();
+        return p1;
     }
     
     @GetMapping("/api/deletepitanje/{id}")
